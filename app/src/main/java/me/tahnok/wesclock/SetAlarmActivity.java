@@ -1,6 +1,7 @@
 package me.tahnok.wesclock;
 
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -67,6 +68,12 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
         time = new Time(hourOfDay, minute);
         Settings.getInstance(this).setTime(time);
         render();
+    }
+
+    @OnClick(R.id.test_button)
+    public void testAlarm() {
+        Intent intent = new Intent(this, AlarmActivity.class);
+        startActivity(intent);
     }
 
 }
