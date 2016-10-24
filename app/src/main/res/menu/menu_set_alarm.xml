@@ -7,4 +7,9 @@
         android:orderInCategory="100"
         android:title="Test alarm"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/test_service"
+        android:orderInCategory="100"
+        android:title="Test service"
+        app:showAsAction="never"/>
 </menu>

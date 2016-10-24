@@ -1,6 +1,8 @@
 package me.tahnok.wesclock;
 
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -27,14 +29,20 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.test_alarm) {
-            testAlarm();
-            return true;
+        switch (item.getItemId()) {
+            case R.id.test_alarm:
+                testAlarm();
+                return true;
+            case R.id.test_service:
+                testService();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
+    }
 
-        return super.onOptionsItemSelected(item);
+    private void testService() {
+        AlarmService.scheduleAlarm(this, time);
     }
 
     private Time time;
@@ -70,6 +78,11 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
     public void testAlarm() {
         Intent intent = new Intent(this, AlarmActivity.class);
         startActivity(intent);
+    }
+
+    public static PendingIntent getPendingIntent(Context context) {
+        Intent intent = new Intent(context, SetAlarmActivity.class);
+        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
 }
