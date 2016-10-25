@@ -1,6 +1,27 @@
 package me.tahnok.wesclock;
 
+import android.support.annotation.NonNull;
+
+import java.util.Calendar;
+
 public class Time {
+
+    public long getFutureOccurrence(Calendar calendar) {
+        Calendar newCalendar = cloneCalendar(calendar);
+        if (calendar.get(Calendar.HOUR) > hour || (calendar.get(Calendar.HOUR) == hour && calendar.get(Calendar.MINUTE) > minute)) {
+            newCalendar.add(Calendar.DATE, 1);
+        }
+        newCalendar.set(Calendar.HOUR, hour);
+        newCalendar.set(Calendar.MINUTE, minute);
+        return newCalendar.getTimeInMillis();
+    }
+
+    @NonNull
+    private Calendar cloneCalendar(Calendar calendar) {
+        Calendar newCalendar = Calendar.getInstance();
+        newCalendar.setTimeInMillis(calendar.getTimeInMillis());
+        return newCalendar;
+    }
 
     private final int hour;
     private final int minute;
