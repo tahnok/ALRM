@@ -91,6 +91,15 @@ public class AlarmService extends Service {
         return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
+    public static boolean isAlarmPending(Context context) {
+        Intent intent = new Intent(context, AlarmService.class);
+        return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE) != null;
+    }
+
+    public static void clearPendingAlarm(Context context) {
+        getPendingIntent(context).cancel();
+    }
+
     public static void stopAlarm(Context context) {
         Intent intent = new Intent(context, AlarmService.class);
         intent.putExtra(EXTRA_COMMAND, STOP_ALARM);

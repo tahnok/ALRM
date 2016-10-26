@@ -19,6 +19,7 @@ import butterknife.OnClick;
 public class SetAlarmActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
 
     @BindView(R.id.current_time) TextView currentTimeView;
+    @BindView(R.id.alarm_status) TextView alarmStatusView;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -57,6 +58,11 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
 
     protected void render() {
         currentTimeView.setText(time.toString());
+        if (AlarmService.isAlarmPending(getApplicationContext())) {
+            alarmStatusView.setText("Alarm is set");
+        } else {
+            alarmStatusView.setText("Alarm is not set");
+        }
     }
 
     @OnClick(R.id.current_time)
@@ -67,6 +73,13 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
     @OnClick(R.id.set_alarm)
     protected void setAlarm() {
         AlarmService.scheduleAlarm(this, time);
+        render();
+    }
+
+    @OnClick(R.id.clear_alarm)
+    protected void clearAlarm() {
+        AlarmService.clearPendingAlarm(getApplicationContext());
+        render();
     }
 
     @Override
