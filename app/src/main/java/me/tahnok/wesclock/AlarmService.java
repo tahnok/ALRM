@@ -12,12 +12,14 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Process;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.Toast;
 
 public class AlarmService extends Service {
     private static final int START_ALARM = 101;
     private static final int STOP_ALARM = 102;
     public static final String EXTRA_COMMAND = "command";
+    private static final String TAG = AlarmService.class.getSimpleName();
 
     private Ringtone ringtone;
 
@@ -69,8 +71,13 @@ public class AlarmService extends Service {
     }
 
     public static void scheduleAlarm(Context context, Time time) {
+        long alarmTime = time.getFutureOccurance();
+        scheduleAlarm(context, alarmTime);
+    }
+
+    public static void scheduleAlarm(Context context, long alarmTime) {
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        long alarmTime = System.currentTimeMillis() + (10 * 1000);
+        Log.e(TAG, "Alarm scheduled for " + alarmTime);
 
         PendingIntent editAlarmInfo = SetAlarmActivity.getPendingIntent(context);
         AlarmManager.AlarmClockInfo alarm = new AlarmManager.AlarmClockInfo(alarmTime, editAlarmInfo);

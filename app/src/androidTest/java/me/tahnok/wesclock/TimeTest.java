@@ -25,7 +25,7 @@ public class TimeTest {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR, 5);
-        calendar.set(Calendar.HOUR, 5);
+        calendar.set(Calendar.MINUTE, 5);
         int date = calendar.get(Calendar.DATE);
 
         long futureOccurrence = time.getFutureOccurrence(calendar);
@@ -46,7 +46,7 @@ public class TimeTest {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR, 3);
-        calendar.set(Calendar.HOUR, 5);
+        calendar.set(Calendar.MINUTE, 5);
         int date = calendar.get(Calendar.DATE);
 
         long futureOccurrence = time.getFutureOccurrence(calendar);

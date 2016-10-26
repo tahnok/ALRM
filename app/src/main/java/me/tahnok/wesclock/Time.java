@@ -6,12 +6,18 @@ import java.util.Calendar;
 
 public class Time {
 
+    public long getFutureOccurance() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        return getFutureOccurrence(calendar);
+    }
+
     public long getFutureOccurrence(Calendar calendar) {
         Calendar newCalendar = cloneCalendar(calendar);
-        if (calendar.get(Calendar.HOUR) > hour || (calendar.get(Calendar.HOUR) == hour && calendar.get(Calendar.MINUTE) > minute)) {
+        if (calendar.get(Calendar.HOUR_OF_DAY) > hour || (calendar.get(Calendar.HOUR_OF_DAY) == hour && calendar.get(Calendar.MINUTE) > minute)) {
             newCalendar.add(Calendar.DATE, 1);
         }
-        newCalendar.set(Calendar.HOUR, hour);
+        newCalendar.set(Calendar.HOUR_OF_DAY, hour);
         newCalendar.set(Calendar.MINUTE, minute);
         return newCalendar.getTimeInMillis();
     }

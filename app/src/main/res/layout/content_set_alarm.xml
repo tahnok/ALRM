@@ -16,7 +16,7 @@
     tools:showIn="@layout/activity_set_alarm">
 
     <TextView
-        android:id="@+id/currentTime"
+        android:id="@+id/current_time"
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,4 +24,9 @@
         android:textSize="40dp"
         tools:text="09:12"
         />
+    <TextView
+        android:id="@+id/set_alarm"
+        android:text="Set alarm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </LinearLayout>

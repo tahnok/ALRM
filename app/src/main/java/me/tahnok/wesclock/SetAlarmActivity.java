@@ -18,7 +18,7 @@ import butterknife.OnClick;
 
 public class SetAlarmActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
 
-    @BindView(R.id.currentTime) TextView currentTimeView;
+    @BindView(R.id.current_time) TextView currentTimeView;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -41,10 +41,6 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
         }
     }
 
-    private void testService() {
-        AlarmService.scheduleAlarm(this, time);
-    }
-
     private Time time;
 
     @Override
@@ -63,9 +59,14 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
         currentTimeView.setText(time.toString());
     }
 
-    @OnClick(R.id.currentTime)
+    @OnClick(R.id.current_time)
     protected void setTime() {
         new TimePickerDialog(this, this, time.getHour(), time.getMinute(), true).show();
+    }
+
+    @OnClick(R.id.set_alarm)
+    protected void setAlarm() {
+        AlarmService.scheduleAlarm(this, time);
     }
 
     @Override
@@ -79,6 +80,12 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
         Intent intent = new Intent(this, AlarmActivity.class);
         startActivity(intent);
     }
+
+    private void testService() {
+        long tenSecondsFromNow = System.currentTimeMillis() + (10 * 1000);
+        AlarmService.scheduleAlarm(this, tenSecondsFromNow);
+    }
+
 
     public static PendingIntent getPendingIntent(Context context) {
         Intent intent = new Intent(context, SetAlarmActivity.class);
