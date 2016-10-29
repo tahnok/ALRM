@@ -10,16 +10,14 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class NetworkTalker {
+public class Network {
 
     private static final String IP_ADDRESS = "192.168.1.239";
     private static final int PORT = 80;
-    private static final String CMD_TURN_ON = "T1";
-    private static final String CMD_TURN_OFF = "T0";
 
     private Delegate delegate;
 
-    public NetworkTalker(Delegate delegate) {
+    public Network(Delegate delegate) {
         this.delegate = delegate;
     }
 

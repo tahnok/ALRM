@@ -18,7 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SetAlarmActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, NetworkTalker.Delegate {
+public class SetAlarmActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, Network.Delegate {
 
     @Override
     public void logError(Exception e, String message) {
@@ -112,11 +112,11 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
     }
 
     private void testTurnOff() {
-        new NetworkTalkerTask().execute(new Pair(new NetworkTalker(this), NetworkTalker.Command.TURN_OFF));
+        new NetworkTask().execute(new Pair(new Network(this), Network.Command.TURN_OFF));
     }
 
     public void testTurnOn() {
-        new NetworkTalkerTask().execute(new Pair(new NetworkTalker(this), NetworkTalker.Command.TURN_ON));
+        new NetworkTask().execute(new Pair(new Network(this), Network.Command.TURN_ON));
     }
 
 

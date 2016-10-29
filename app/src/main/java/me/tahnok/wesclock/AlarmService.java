@@ -15,14 +15,14 @@ import android.util.Pair;
 import android.widget.Toast;
 
 
-public class AlarmService extends Service implements NetworkTalker.Delegate {
+public class AlarmService extends Service implements Network.Delegate {
 
     public static final String EXTRA_COMMAND = "command";
     private static final int START_ALARM = 101;
     private static final int STOP_ALARM = 102;
     private static final String TAG = AlarmService.class.getSimpleName();
 
-    protected NetworkTalker networkTalker;
+    protected Network network;
     private Ringtone ringtone;
 
     @Nullable
@@ -35,7 +35,7 @@ public class AlarmService extends Service implements NetworkTalker.Delegate {
     public void onCreate() {
         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         ringtone = RingtoneManager.getRingtone(getApplicationContext(), notification);
-        networkTalker = new NetworkTalker(AlarmService.this);
+        network = new Network(AlarmService.this);
     }
 
     @Override
@@ -69,11 +69,11 @@ public class AlarmService extends Service implements NetworkTalker.Delegate {
     }
 
     private void turnOn() {
-        new NetworkTalkerTask().execute(new Pair(networkTalker, NetworkTalker.Command.TURN_ON));
+        new NetworkTask().execute(new Pair(network, Network.Command.TURN_ON));
     }
 
     private void turnOff() {
-        new NetworkTalkerTask().execute(new Pair(networkTalker, NetworkTalker.Command.TURN_OFF));
+        new NetworkTask().execute(new Pair(network, Network.Command.TURN_OFF));
     }
 
     protected void stopAlarm() {
