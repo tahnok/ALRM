@@ -92,15 +92,17 @@ public class AlarmService extends Service implements Network.Delegate {
     }
 
     public static PendingIntent getPendingIntent(Context context) {
-        Intent intent = new Intent(context, AlarmService.class);
-        return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return getPendingIntent(context, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     public static boolean isAlarmPending(Context context) {
-        Intent intent = new Intent(context, AlarmService.class);
-        return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE) != null;
+        return getPendingIntent(context, PendingIntent.FLAG_NO_CREATE) != null;
     }
 
+    private static PendingIntent getPendingIntent(Context context, int flag) {
+        Intent intent = new Intent(context, AlarmService.class);
+        return PendingIntent.getService(context, 0, intent, flag);
+    }
 
     public static void scheduleAlarm(Context context, Alarm alarm) {
         long alarmTime = alarm.getFutureOccurance();
