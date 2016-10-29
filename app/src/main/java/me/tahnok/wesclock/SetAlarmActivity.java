@@ -1,12 +1,11 @@
 package me.tahnok.wesclock;
 
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SetAlarmActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, Network.Delegate {
+public class SetAlarmActivity extends Activity implements TimePickerDialog.OnTimeSetListener, Network.Delegate {
 
     @BindView(R.id.current_time) TextView currentTimeView;
     @BindView(R.id.alarm_status) TextView alarmStatusView;
@@ -29,8 +28,6 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_alarm);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         ButterKnife.bind(this);
         alarm = Settings.getInstance(this).getTime();
@@ -115,8 +112,13 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
     }
 
     @Override
-    public void logError(Exception e, String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    public void logError(Exception e, final String message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     public static PendingIntent getPendingIntent(Context context) {

@@ -6,20 +6,20 @@
         android:id="@+id/test_alarm"
         android:orderInCategory="100"
         android:title="@string/test_alarm"
-        app:showAsAction="never"/>
+        android:showAsAction="never"/>
     <item
         android:id="@+id/test_service"
         android:orderInCategory="100"
         android:title="@string/test_service"
-        app:showAsAction="never"/>
+        android:showAsAction="never"/>
     <item
         android:id="@+id/test_turn_on"
         android:orderInCategory="100"
         android:title="@string/test_turning_light_on"
-        app:showAsAction="never"/>
+        android:showAsAction="never"/>
     <item
         android:id="@+id/test_turn_off"
         android:orderInCategory="100"
         android:title="@string/test_turning_light_off"
-        app:showAsAction="never"/>
+        android:showAsAction="never"/>
 </menu>
