@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -16,7 +18,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SetAlarmActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
+public class SetAlarmActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, NetworkTalker.Delegate {
+
+    @Override
+    public void logError(Exception e, String message) {
+        Log.e("TEST", message, e);
+    }
 
     @BindView(R.id.current_time) TextView currentTimeView;
     @BindView(R.id.alarm_status) TextView alarmStatusView;
@@ -37,6 +44,11 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
             case R.id.test_service:
                 testService();
                 return true;
+            case R.id.test_turn_on:
+                testTurnOn();
+                return true;
+            case R.id.test_turn_off:
+                testTurnOff();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -97,6 +109,14 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
     private void testService() {
         long tenSecondsFromNow = System.currentTimeMillis() + (10 * 1000);
         AlarmService.scheduleAlarm(this, tenSecondsFromNow);
+    }
+
+    private void testTurnOff() {
+        new NetworkTalkerTask().execute(new Pair(new NetworkTalker(this), NetworkTalker.Command.TURN_OFF));
+    }
+
+    public void testTurnOn() {
+        new NetworkTalkerTask().execute(new Pair(new NetworkTalker(this), NetworkTalker.Command.TURN_ON));
     }
 
 

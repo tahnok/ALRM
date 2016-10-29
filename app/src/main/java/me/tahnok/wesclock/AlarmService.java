@@ -8,37 +8,34 @@ import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.HandlerThread;
 import android.os.IBinder;
-import android.os.Process;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.util.Pair;
 import android.widget.Toast;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
 
-public class AlarmService extends Service {
+public class AlarmService extends Service implements NetworkTalker.Delegate {
+
+    public static final String EXTRA_COMMAND = "command";
     private static final int START_ALARM = 101;
     private static final int STOP_ALARM = 102;
-    public static final String EXTRA_COMMAND = "command";
     private static final String TAG = AlarmService.class.getSimpleName();
 
+    protected NetworkTalker networkTalker;
     private Ringtone ringtone;
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 
     @Override
     public void onCreate() {
-        HandlerThread thread = new HandlerThread("ServiceStartArguments", Process.THREAD_PRIORITY_BACKGROUND);
-        thread.start();
-
         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         ringtone = RingtoneManager.getRingtone(getApplicationContext(), notification);
+        networkTalker = new NetworkTalker(AlarmService.this);
     }
 
     @Override
@@ -61,12 +58,6 @@ public class AlarmService extends Service {
         return START_STICKY;
     }
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
     protected void playAlarm() {
         ringtone.play();
 
@@ -74,40 +65,42 @@ public class AlarmService extends Service {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
 
-        sendPacket();
+        turnOn();
     }
 
-    private void sendPacket() {
-        new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                doNetworkStuff();
-                return null;
-            }
-        }.doInBackground();
+    private void turnOn() {
+        new NetworkTalkerTask().execute(new Pair(networkTalker, NetworkTalker.Command.TURN_ON));
     }
 
-    private void doNetworkStuff() {
-        try {
-            InetAddress serverAddress = InetAddress.getByName("192.168.1.239");
-            Socket socket = new Socket(serverAddress, 80);
-            PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
-            out.print("T1");
-            out.flush();
-            out.close();
-            socket.close();
-        } catch (UnknownHostException e) {
-            Log.e(TAG, "host not found", e);
-        } catch (IOException e) {
-            Log.e(TAG, "IO exception", e);
-        }
+    private void turnOff() {
+        new NetworkTalkerTask().execute(new Pair(networkTalker, NetworkTalker.Command.TURN_OFF));
     }
 
     protected void stopAlarm() {
         ringtone.stop();
         Toast.makeText(getApplicationContext(), "Stopped", Toast.LENGTH_LONG).show();
+        turnOff();
     }
+
+    @Override
+    public void logError(Exception e, String message) {
+        Log.e(TAG, message, e);
+    }
+
+    public static void clearPendingAlarm(Context context) {
+        getPendingIntent(context).cancel();
+    }
+
+    public static PendingIntent getPendingIntent(Context context) {
+        Intent intent = new Intent(context, AlarmService.class);
+        return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    public static boolean isAlarmPending(Context context) {
+        Intent intent = new Intent(context, AlarmService.class);
+        return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE) != null;
+    }
+
 
     public static void scheduleAlarm(Context context, Time time) {
         long alarmTime = time.getFutureOccurance();
@@ -123,20 +116,6 @@ public class AlarmService extends Service {
 
         PendingIntent alarmPendingIntent = AlarmService.getPendingIntent(context);
         manager.setAlarmClock(alarm, alarmPendingIntent);
-    }
-
-    public static PendingIntent getPendingIntent(Context context) {
-        Intent intent = new Intent(context, AlarmService.class);
-        return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
-    public static boolean isAlarmPending(Context context) {
-        Intent intent = new Intent(context, AlarmService.class);
-        return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE) != null;
-    }
-
-    public static void clearPendingAlarm(Context context) {
-        getPendingIntent(context).cancel();
     }
 
     public static void stopAlarm(Context context) {

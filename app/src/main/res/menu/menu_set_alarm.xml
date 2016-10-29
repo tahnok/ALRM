@@ -12,4 +12,14 @@
         android:orderInCategory="100"
         android:title="Test service"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/test_turn_on"
+        android:orderInCategory="100"
+        android:title="Test turning light on"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/test_turn_off"
+        android:orderInCategory="100"
+        android:title="Test turning light off"
+        app:showAsAction="never"/>
 </menu>

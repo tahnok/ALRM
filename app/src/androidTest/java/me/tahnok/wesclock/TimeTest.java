@@ -35,6 +35,7 @@ public class TimeTest {
 
         assertEquals(4, futureCalendar.get(Calendar.HOUR));
         assertEquals(23, futureCalendar.get(Calendar.MINUTE));
+        assertEquals(0, futureCalendar.get(Calendar.SECOND));
         assertEquals(date + 1, futureCalendar.get(Calendar.DATE));
         assertTrue(futureCalendar.compareTo(calendar) > 0);
     }
@@ -56,6 +57,7 @@ public class TimeTest {
 
         assertEquals(4, futureCalendar.get(Calendar.HOUR));
         assertEquals(23, futureCalendar.get(Calendar.MINUTE));
+        assertEquals(0, futureCalendar.get(Calendar.SECOND));
         assertEquals(date, futureCalendar.get(Calendar.DATE));
         assertTrue(futureCalendar.compareTo(calendar) > 0);
     }

@@ -19,6 +19,7 @@ public class Time {
         }
         newCalendar.set(Calendar.HOUR_OF_DAY, hour);
         newCalendar.set(Calendar.MINUTE, minute);
+        newCalendar.set(Calendar.SECOND, 0);
         return newCalendar.getTimeInMillis();
     }
 
