@@ -10,17 +10,17 @@ import static junit.framework.Assert.assertTrue;
 /**
  * Created by wes on 2016-10-24.
  */
-public class TimeTest {
+public class AlarmTest {
 
     @Test
     public void testToString() {
-        Time time = new Time(4, 23);
-        assertEquals("04:23", time.toString());
+        Alarm alarm = new Alarm(4, 23);
+        assertEquals("04:23", alarm.toString());
     }
 
     @Test
     public void testNextOccurrenceTomorrow() {
-        Time time = new Time(4, 23);
+        Alarm alarm = new Alarm(4, 23);
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
@@ -28,7 +28,7 @@ public class TimeTest {
         calendar.set(Calendar.MINUTE, 5);
         int date = calendar.get(Calendar.DATE);
 
-        long futureOccurrence = time.getFutureOccurrence(calendar);
+        long futureOccurrence = alarm.getFutureOccurrence(calendar);
 
         Calendar futureCalendar = Calendar.getInstance();
         futureCalendar.setTimeInMillis(futureOccurrence);
@@ -42,7 +42,7 @@ public class TimeTest {
 
     @Test
     public void testNextOccurrenceToday() {
-        Time time = new Time(4, 23);
+        Alarm alarm = new Alarm(4, 23);
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
@@ -50,7 +50,7 @@ public class TimeTest {
         calendar.set(Calendar.MINUTE, 5);
         int date = calendar.get(Calendar.DATE);
 
-        long futureOccurrence = time.getFutureOccurrence(calendar);
+        long futureOccurrence = alarm.getFutureOccurrence(calendar);
 
         Calendar futureCalendar = Calendar.getInstance();
         futureCalendar.setTimeInMillis(futureOccurrence);

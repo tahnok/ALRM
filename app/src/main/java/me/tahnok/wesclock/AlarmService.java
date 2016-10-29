@@ -102,8 +102,8 @@ public class AlarmService extends Service implements NetworkTalker.Delegate {
     }
 
 
-    public static void scheduleAlarm(Context context, Time time) {
-        long alarmTime = time.getFutureOccurance();
+    public static void scheduleAlarm(Context context, Alarm alarm) {
+        long alarmTime = alarm.getFutureOccurance();
         scheduleAlarm(context, alarmTime);
     }
 

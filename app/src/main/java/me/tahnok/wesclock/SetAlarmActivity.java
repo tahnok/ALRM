@@ -54,7 +54,7 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
         }
     }
 
-    private Time time;
+    private Alarm alarm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,12 +64,12 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
         setSupportActionBar(toolbar);
 
         ButterKnife.bind(this);
-        time = Settings.getInstance(this).getTime();
+        alarm = Settings.getInstance(this).getTime();
         render();
     }
 
     protected void render() {
-        currentTimeView.setText(time.toString());
+        currentTimeView.setText(alarm.toString());
         if (AlarmService.isAlarmPending(getApplicationContext())) {
             alarmStatusView.setText("Alarm is set");
         } else {
@@ -79,12 +79,12 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
 
     @OnClick(R.id.current_time)
     protected void setTime() {
-        new TimePickerDialog(this, this, time.getHour(), time.getMinute(), true).show();
+        new TimePickerDialog(this, this, alarm.getHour(), alarm.getMinute(), true).show();
     }
 
     @OnClick(R.id.set_alarm)
     protected void setAlarm() {
-        AlarmService.scheduleAlarm(this, time);
+        AlarmService.scheduleAlarm(this, alarm);
         render();
     }
 
@@ -96,8 +96,8 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        time = new Time(hourOfDay, minute);
-        Settings.getInstance(this).setTime(time);
+        alarm = new Alarm(hourOfDay, minute);
+        Settings.getInstance(this).setAlarm(alarm);
         render();
     }
 
