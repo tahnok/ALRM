@@ -3,6 +3,7 @@ package me.tahnok.wesclock;
 import android.support.annotation.NonNull;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 public class Alarm {
 
@@ -23,7 +24,7 @@ public class Alarm {
     }
 
     public String toString() {
-        return String.format("%02d:%02d", this.hour, this.minute);
+        return String.format(Locale.US, "%02d:%02d", this.hour, this.minute);
     }
 
     public long getFutureOccurance() {

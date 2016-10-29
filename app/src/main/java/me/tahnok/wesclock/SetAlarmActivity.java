@@ -7,12 +7,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,13 +20,22 @@ import butterknife.OnClick;
 
 public class SetAlarmActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, Network.Delegate {
 
-    @Override
-    public void logError(Exception e, String message) {
-        Log.e("TEST", message, e);
-    }
-
     @BindView(R.id.current_time) TextView currentTimeView;
     @BindView(R.id.alarm_status) TextView alarmStatusView;
+
+    private Alarm alarm;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_set_alarm);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        ButterKnife.bind(this);
+        alarm = Settings.getInstance(this).getTime();
+        render();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -54,26 +63,12 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
         }
     }
 
-    private Alarm alarm;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_set_alarm);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        ButterKnife.bind(this);
-        alarm = Settings.getInstance(this).getTime();
-        render();
-    }
-
     protected void render() {
         currentTimeView.setText(alarm.toString());
         if (AlarmService.isAlarmPending(getApplicationContext())) {
-            alarmStatusView.setText("Alarm is set");
+            alarmStatusView.setText(R.string.alarm_set);
         } else {
-            alarmStatusView.setText("Alarm is not set");
+            alarmStatusView.setText(R.string.alarm_not_set);
         }
     }
 
@@ -119,6 +114,10 @@ public class SetAlarmActivity extends AppCompatActivity implements TimePickerDia
         new NetworkTask().execute(new Pair(new Network(this), Network.Command.TURN_ON));
     }
 
+    @Override
+    public void logError(Exception e, String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
 
     public static PendingIntent getPendingIntent(Context context) {
         Intent intent = new Intent(context, SetAlarmActivity.class);
