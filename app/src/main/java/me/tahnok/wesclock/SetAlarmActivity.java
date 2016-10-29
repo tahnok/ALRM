@@ -9,18 +9,27 @@ import android.os.Bundle;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SetAlarmActivity extends Activity implements TimePickerDialog.OnTimeSetListener, Network.Delegate {
+public class SetAlarmActivity extends Activity implements
+    TimePickerDialog.OnTimeSetListener,
+    Network.Delegate,
+    CompoundButton.OnCheckedChangeListener {
 
     @BindView(R.id.current_time) TextView currentTimeView;
-    @BindView(R.id.alarm_status) TextView alarmStatusView;
+    @BindView(R.id.alarm_switch) Switch alarmSwitch;
+
+    @BindColor(R.color.alarm_enabled) int enabledColour;
+    @BindColor(R.color.alarm_disabled) int disabledColour;
 
     private Alarm alarm;
 
@@ -30,13 +39,15 @@ public class SetAlarmActivity extends Activity implements TimePickerDialog.OnTim
         setContentView(R.layout.activity_set_alarm);
 
         ButterKnife.bind(this);
+
+        alarmSwitch.setOnCheckedChangeListener(this);
+
         alarm = Settings.getInstance(this).getTime();
         render();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_set_alarm, menu);
         return true;
     }
@@ -63,9 +74,10 @@ public class SetAlarmActivity extends Activity implements TimePickerDialog.OnTim
     protected void render() {
         currentTimeView.setText(alarm.toString());
         if (AlarmService.isAlarmPending(getApplicationContext())) {
-            alarmStatusView.setText(R.string.alarm_set);
+            currentTimeView.setTextColor(enabledColour);
+            currentTimeView.setEnabled(true);
         } else {
-            alarmStatusView.setText(R.string.alarm_not_set);
+            currentTimeView.setTextColor(disabledColour);
         }
     }
 
@@ -74,15 +86,14 @@ public class SetAlarmActivity extends Activity implements TimePickerDialog.OnTim
         new TimePickerDialog(this, this, alarm.getHour(), alarm.getMinute(), true).show();
     }
 
-    @OnClick(R.id.set_alarm)
-    protected void setAlarm() {
-        AlarmService.scheduleAlarm(this, alarm);
-        render();
-    }
 
-    @OnClick(R.id.clear_alarm)
-    protected void clearAlarm() {
-        AlarmService.clearPendingAlarm(getApplicationContext());
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (isChecked) {
+            AlarmService.scheduleAlarm(getApplicationContext(), alarm);
+        } else {
+            AlarmService.clearPendingAlarm(getApplicationContext());
+        }
         render();
     }
 
