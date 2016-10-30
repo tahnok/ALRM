@@ -15,6 +15,8 @@ public class SettingsActivity extends Activity {
     @BindView(R.id.port) protected TextView portView;
     @BindView(R.id.ip_address) protected TextView ipAddressView;
 
+    protected Settings settings;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,24 +26,41 @@ public class SettingsActivity extends Activity {
         setTitle(getString(R.string.settings));
 
         ButterKnife.bind(this);
+        settings = Settings.getInstance(getApplicationContext());
         render();
     }
 
     private void render() {
-        Settings settings = Settings.getInstance(getApplicationContext());
-        portView.setText(settings.getPort());
+        portView.setText(String.valueOf(settings.getPort()));
         ipAddressView.setText(settings.getIpdAddress());
 
     }
 
     @OnClick(R.id.ip_address_row)
     protected void setIpAddress() {
-
+        new StringPickerDialog().show(
+            R.string.ip_address,
+            settings.getIpdAddress(),
+            getFragmentManager(),
+            new StringPickerDialog.Delegate() {
+                @Override
+                public void onValueSelected(String string) {
+                    settings.setIpAddress(string);
+                }
+        });
     }
 
     @OnClick(R.id.port_row)
     protected void setPortAddress() {
-        
+        new StringPickerDialog().show(
+            R.string.port,
+            String.valueOf(settings.getPort()),
+            getFragmentManager(), new StringPickerDialog.Delegate() {
+                @Override
+                public void onValueSelected(String string) {
+                    settings.setPort(Integer.valueOf(string));
+                }
+            });
     }
 
     @OnClick(R.id.source_code)

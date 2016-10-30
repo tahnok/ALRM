@@ -9,4 +9,6 @@
     <string name="port">Port</string>
     <string name="source_code">Source Code</string>
     <string name="ip_address">IP Address</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>

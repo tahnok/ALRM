@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 public class Settings {
     private static final String KEY_HOUR = "hour";
     private static final String KEY_MINUTE = "minute";
+    private static final String KEY_PORT = "port";
+    private static final String KEY_IP_ADDRESS = "ip_address";
 
     private static Settings instance;
     private final SharedPreferences preferences;
@@ -36,15 +38,30 @@ public class Settings {
     public void setAlarm(Alarm alarm) {
         preferences.edit()
             .putInt(KEY_HOUR, alarm.getHour())
-            .putInt(KEY_MINUTE, alarm.getMinute()).apply();
+            .putInt(KEY_MINUTE, alarm.getMinute())
+            .apply();
     }
 
     public String getIpdAddress() {
-        return "placeholder";
+        return preferences.getString(KEY_IP_ADDRESS, "");
     }
 
-    public String getPort() {
-        return "0";
+    public void setIpAddress(String ipAddress) {
+        preferences
+            .edit()
+            .putString(KEY_IP_ADDRESS, ipAddress)
+            .apply();
+    }
+
+    public int getPort() {
+        return preferences.getInt(KEY_PORT, -1);
+    }
+
+    public void setPort(int port) {
+        preferences
+            .edit()
+            .putInt(KEY_PORT, port)
+            .apply();
     }
 
 
