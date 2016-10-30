@@ -20,9 +20,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".AlarmActivity">
-        </activity>
 
+        <activity android:name=".AlarmActivity"/>
+        <activity android:name=".SettingsActivity"
+                  android:parentActivityName=".SetAlarmActivity"/>
 
         <service android:name=".AlarmService"
                  android:permission="android.permission.BIND_JOB_SERVICE" />

@@ -39,4 +39,13 @@ public class Settings {
             .putInt(KEY_MINUTE, alarm.getMinute()).apply();
     }
 
+    public String getIpdAddress() {
+        return "placeholder";
+    }
+
+    public String getPort() {
+        return "0";
+    }
+
+
 }

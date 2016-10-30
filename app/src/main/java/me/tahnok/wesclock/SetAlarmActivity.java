@@ -66,6 +66,10 @@ public class SetAlarmActivity extends Activity implements
                 return true;
             case R.id.test_turn_off:
                 testTurnOff();
+                return true;
+            case R.id.settings:
+                launchSettings();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -120,6 +124,11 @@ public class SetAlarmActivity extends Activity implements
 
     public void testTurnOn() {
         new NetworkTask().execute(new Pair(new Network(this), Network.Command.TURN_ON));
+    }
+
+    public void launchSettings() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
     }
 
     @Override
