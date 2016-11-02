@@ -4,11 +4,12 @@
     <string name="test_service">Test service</string>
     <string name="test_turning_light_on">Test turning light on</string>
     <string name="test_turning_light_off">Test turning light off</string>
-    <string name="exit">Exit</string>
+    <string name="dismiss">Dismiss</string>
     <string name="settings">Settings</string>
     <string name="port">Port</string>
     <string name="source_code">Source Code</string>
     <string name="ip_address">IP Address</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="snooze">Snooze</string>
 </resources>
