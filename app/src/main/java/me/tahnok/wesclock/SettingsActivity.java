@@ -46,6 +46,7 @@ public class SettingsActivity extends Activity {
                 @Override
                 public void onValueSelected(String string) {
                     settings.setIpAddress(string);
+                    render();
                 }
         });
     }
@@ -59,6 +60,7 @@ public class SettingsActivity extends Activity {
                 @Override
                 public void onValueSelected(String string) {
                     settings.setPort(Integer.valueOf(string));
+                    render();
                 }
             });
     }
