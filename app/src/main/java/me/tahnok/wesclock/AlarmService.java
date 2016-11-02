@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioAttributes;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -32,10 +33,21 @@ public class AlarmService extends Service implements ClockClient.Delegate {
 
     @Override
     public void onCreate() {
-        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        ringtone = RingtoneManager.getRingtone(getApplicationContext(), notification);
         Settings settings = Settings.getInstance(getApplicationContext());
+        ringtone = buildRingtone();
         clockClient = new ClockClient(settings, this);
+    }
+
+    private Ringtone buildRingtone() {
+        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notification);
+        AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                                              .setUsage(AudioAttributes.USAGE_ALARM)
+                                              .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                                              .build();
+
+        ringtone.setAudioAttributes(audioAttributes);
+        return ringtone;
     }
 
     @Override
@@ -88,7 +100,8 @@ public class AlarmService extends Service implements ClockClient.Delegate {
     }
 
     public static void clearPendingAlarm(Context context) {
-        getPendingIntent(context).cancel();
+        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        manager.cancel(getPendingIntent(context));
     }
 
     public static PendingIntent getPendingIntent(Context context) {
