@@ -10,22 +10,28 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class Network {
+public class ClockClient {
 
-    private static final String IP_ADDRESS = "192.168.1.239";
-    private static final int PORT = 80;
+    private String ipAddress;
+    private int port;
 
     private Delegate delegate;
 
-    public Network(Delegate delegate) {
+    public ClockClient(String ipAddress, int port, Delegate delegate) {
+        this.ipAddress = ipAddress;
+        this.port = port;
         this.delegate = delegate;
+    }
+
+    public ClockClient(SettingsInterface settings, Delegate delegate) {
+        this(settings.getIpdAddress(), settings.getPort(), delegate);
     }
 
     public void sendCommand(Command command) {
         try {
-            InetAddress serverAddress = InetAddress.getByName(IP_ADDRESS);
+            InetAddress serverAddress = InetAddress.getByName(ipAddress);
             Socket socket = new Socket();
-            socket.connect(new InetSocketAddress(serverAddress, PORT), 1000);
+            socket.connect(new InetSocketAddress(serverAddress, port), 1000);
             PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
             out.print(command.command);
             out.flush();
@@ -45,7 +51,6 @@ public class Network {
         String command;
         Command(String command) { this.command = command; }
     }
-
 
     public interface Delegate {
         void logError(Exception e, String message);

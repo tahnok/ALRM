@@ -11,18 +11,17 @@ import android.net.Uri;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.util.Pair;
 import android.widget.Toast;
 
 
-public class AlarmService extends Service implements Network.Delegate {
+public class AlarmService extends Service implements ClockClient.Delegate {
 
     public static final String EXTRA_COMMAND = "command";
     private static final int START_ALARM = 101;
     private static final int STOP_ALARM = 102;
     private static final String TAG = AlarmService.class.getSimpleName();
 
-    protected Network network;
+    protected ClockClient clockClient;
     private Ringtone ringtone;
 
     @Nullable
@@ -35,7 +34,8 @@ public class AlarmService extends Service implements Network.Delegate {
     public void onCreate() {
         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         ringtone = RingtoneManager.getRingtone(getApplicationContext(), notification);
-        network = new Network(AlarmService.this);
+        Settings settings = Settings.getInstance(getApplicationContext());
+        clockClient = new ClockClient(settings, this);
     }
 
     @Override
@@ -69,11 +69,11 @@ public class AlarmService extends Service implements Network.Delegate {
     }
 
     private void turnOn() {
-        new NetworkTask().execute(new Pair(network, Network.Command.TURN_ON));
+        new NetworkTask().execute(clockClient, ClockClient.Command.TURN_ON);
     }
 
     private void turnOff() {
-        new NetworkTask().execute(new Pair(network, Network.Command.TURN_OFF));
+        new NetworkTask().execute(clockClient, ClockClient.Command.TURN_OFF);
     }
 
     protected void stopAlarm() {

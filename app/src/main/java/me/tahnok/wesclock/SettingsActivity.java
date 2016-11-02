@@ -15,7 +15,7 @@ public class SettingsActivity extends Activity {
     @BindView(R.id.port) protected TextView portView;
     @BindView(R.id.ip_address) protected TextView ipAddressView;
 
-    protected Settings settings;
+    protected SettingsInterface settings;
 
 
     @Override

@@ -6,7 +6,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Pair;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CompoundButton;
@@ -22,7 +22,7 @@ import butterknife.OnClick;
 
 public class SetAlarmActivity extends Activity implements
     TimePickerDialog.OnTimeSetListener,
-    Network.Delegate,
+    ClockClient.Delegate,
     CompoundButton.OnCheckedChangeListener {
 
     @BindView(R.id.current_time) TextView currentTimeView;
@@ -32,6 +32,8 @@ public class SetAlarmActivity extends Activity implements
     @BindColor(R.color.alarm_disabled) int disabledColour;
 
     private Alarm alarm;
+    protected ClockClient clockClient;
+    protected Settings settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,9 @@ public class SetAlarmActivity extends Activity implements
 
         alarmSwitch.setOnCheckedChangeListener(this);
 
-        alarm = Settings.getInstance(this).getTime();
+        settings = Settings.getInstance(getApplicationContext());
+        alarm = settings.getTime();
+        clockClient = new ClockClient(settings, this);
         render();
     }
 
@@ -119,11 +123,11 @@ public class SetAlarmActivity extends Activity implements
     }
 
     private void testTurnOff() {
-        new NetworkTask().execute(new Pair(new Network(this), Network.Command.TURN_OFF));
+        new NetworkTask().execute(clockClient, ClockClient.Command.TURN_OFF);
     }
 
     public void testTurnOn() {
-        new NetworkTask().execute(new Pair(new Network(this), Network.Command.TURN_ON));
+        new NetworkTask().execute(clockClient, ClockClient.Command.TURN_ON);
     }
 
     public void launchSettings() {
@@ -132,10 +136,11 @@ public class SetAlarmActivity extends Activity implements
     }
 
     @Override
-    public void logError(Exception e, final String message) {
+    public void logError(final Exception e, final String message) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                Log.e("Alarm", "Error", e);
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
             }
         });

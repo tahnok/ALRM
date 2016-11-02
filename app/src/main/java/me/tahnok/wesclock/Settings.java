@@ -3,7 +3,7 @@ package me.tahnok.wesclock;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class Settings {
+public class Settings implements SettingsInterface {
     private static final String KEY_HOUR = "hour";
     private static final String KEY_MINUTE = "minute";
     private static final String KEY_PORT = "port";
@@ -23,6 +23,7 @@ public class Settings {
         return instance;
     }
 
+    @Override
     public Alarm getTime() {
         return new Alarm(getHour(), getMinute());
     }
@@ -35,6 +36,7 @@ public class Settings {
         return preferences.getInt(KEY_HOUR, 7);
     }
 
+    @Override
     public void setAlarm(Alarm alarm) {
         preferences.edit()
             .putInt(KEY_HOUR, alarm.getHour())
@@ -42,10 +44,12 @@ public class Settings {
             .apply();
     }
 
+    @Override
     public String getIpdAddress() {
         return preferences.getString(KEY_IP_ADDRESS, "");
     }
 
+    @Override
     public void setIpAddress(String ipAddress) {
         preferences
             .edit()
@@ -53,16 +57,17 @@ public class Settings {
             .apply();
     }
 
+    @Override
     public int getPort() {
         return preferences.getInt(KEY_PORT, -1);
     }
 
+    @Override
     public void setPort(int port) {
         preferences
             .edit()
             .putInt(KEY_PORT, port)
             .apply();
     }
-
 
 }
