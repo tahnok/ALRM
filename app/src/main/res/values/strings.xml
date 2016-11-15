@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WesClock</string>
+    <string name="app_name">ALRM</string>
     <string name="test_alarm">Test alarm</string>
     <string name="test_service">Test service</string>
     <string name="test_turning_light_on">Test turning light on</string>

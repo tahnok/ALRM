@@ -1,4 +1,4 @@
-package me.tahnok.wesclock;
+package me.tahnok.alrm;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

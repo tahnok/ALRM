@@ -1,4 +1,4 @@
-package me.tahnok.wesclock;
+package me.tahnok.alrm;
 
 import android.app.Activity;
 import android.app.PendingIntent;

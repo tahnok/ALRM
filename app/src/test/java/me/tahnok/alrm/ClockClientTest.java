@@ -1,4 +1,4 @@
-package me.tahnok.wesclock;
+package me.tahnok.alrm;
 
 import org.junit.Before;
 import org.junit.Test;
