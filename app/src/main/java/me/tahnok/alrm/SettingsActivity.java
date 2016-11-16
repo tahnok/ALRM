@@ -12,6 +12,7 @@ import butterknife.OnClick;
 
 public class SettingsActivity extends Activity {
 
+    public static final String SOURCE_CODE = "https://github.com/tahnok/ALRM";
     @BindView(R.id.port) protected TextView portView;
     @BindView(R.id.ip_address) protected TextView ipAddressView;
 
@@ -67,7 +68,7 @@ public class SettingsActivity extends Activity {
 
     @OnClick(R.id.source_code)
     protected void launchSourceCode() {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/tahnok/WesClock"));
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(SOURCE_CODE));
         startActivity(browserIntent);
     }
 }
