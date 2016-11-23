@@ -5,7 +5,7 @@ import android.util.Log;
 
 public class NetworkTask extends AsyncTask<Object, Void, Void> {
 
-    private static final int TEN_SECONDS = 10 * 1000;
+    private static final int DELAY = 30 * 1000;
     private static final String LOG_TAG = "NetworkTask";
 
     @Override
@@ -14,7 +14,7 @@ public class NetworkTask extends AsyncTask<Object, Void, Void> {
             throw new RuntimeException("Got wrong kind of arguments");
         }
         try {
-            Thread.sleep(TEN_SECONDS);
+            Thread.sleep(DELAY);
         } catch (InterruptedException e) {
             Log.e(LOG_TAG, "couldn't sleep", e);
         }
