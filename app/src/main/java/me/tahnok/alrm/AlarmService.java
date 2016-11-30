@@ -9,6 +9,7 @@ import android.media.AudioAttributes;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -24,6 +25,8 @@ public class AlarmService extends Service implements ClockClient.Delegate {
 
     protected ClockClient clockClient;
     private Ringtone ringtone;
+    private AlarmStateMachine stateMachine;
+    private Handler handler;
 
     @Nullable
     @Override
@@ -36,6 +39,8 @@ public class AlarmService extends Service implements ClockClient.Delegate {
         Settings settings = Settings.getInstance(getApplicationContext());
         ringtone = buildRingtone();
         clockClient = new ClockClient(settings, this);
+        stateMachine = new AlarmStateMachine();
+        handler = new Handler();
     }
 
     private Ringtone buildRingtone() {
@@ -58,7 +63,7 @@ public class AlarmService extends Service implements ClockClient.Delegate {
         int command = intent.getIntExtra(EXTRA_COMMAND, START_ALARM);
         switch (command) {
             case START_ALARM:
-                playAlarm();
+                startAlarm();
                 break;
             case STOP_ALARM:
                 stopAlarm();
@@ -70,28 +75,68 @@ public class AlarmService extends Service implements ClockClient.Delegate {
         return START_STICKY;
     }
 
-    protected void playAlarm() {
-        ringtone.play();
+    private void startAlarm() {
+        stateMachine.reset();
+        tick();
+    }
 
+    protected void tick() {
+        AlarmStateMachine.State state = stateMachine.getState();
+        Toast.makeText(getApplicationContext(), "Current state: " + state, Toast.LENGTH_LONG).show();
+        switch (state) {
+            case STARTING:
+                launchAlarmActivity();
+                stateMachine.step();
+                tickAfterDelay(30_000L);
+                break;
+            case LIGHT:
+                turnLightOn();
+                tickAfterDelay(60_000L);
+                stateMachine.step();
+                break;
+            case SOUND:
+                playSound();
+                stateMachine.step();
+                break;
+            case RINGING:
+            case STOPPED:
+            default:
+                break;
+        }
+    }
+
+    private void tickAfterDelay(long delay) {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                tick();
+            }
+        }, delay);
+    }
+
+    private void playSound() {
+        ringtone.play();
+    }
+
+    private void launchAlarmActivity() {
         Intent intent = new Intent(getApplicationContext(), AlarmActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-
-        turnOn();
     }
 
-    private void turnOn() {
+    private void turnLightOn() {
         new NetworkTask().execute(clockClient, ClockClient.Command.TURN_ON);
     }
 
-    private void turnOff() {
+    private void turnLightOff() {
         new NetworkTask().execute(clockClient, ClockClient.Command.TURN_OFF);
     }
 
     protected void stopAlarm() {
+        stateMachine.stop();
         ringtone.stop();
+        turnLightOff();
         Toast.makeText(getApplicationContext(), "Stopped", Toast.LENGTH_LONG).show();
-        turnOff();
     }
 
     @Override
