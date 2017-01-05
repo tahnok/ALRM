@@ -47,6 +47,11 @@ public class SetAlarmActivity extends Activity implements
         settings = Settings.getInstance(getApplicationContext());
         alarm = settings.getTime();
         clockClient = new ClockClient(settings, this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         render();
     }
 
@@ -83,9 +88,10 @@ public class SetAlarmActivity extends Activity implements
         currentTimeView.setText(alarm.toString());
         if (AlarmService.isAlarmPending(getApplicationContext())) {
             currentTimeView.setTextColor(enabledColour);
-            currentTimeView.setEnabled(true);
+            alarmSwitch.setChecked(true);
         } else {
             currentTimeView.setTextColor(disabledColour);
+            alarmSwitch.setChecked(false);
         }
     }
 

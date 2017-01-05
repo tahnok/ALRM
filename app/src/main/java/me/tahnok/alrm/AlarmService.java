@@ -136,6 +136,10 @@ public class AlarmService extends Service implements ClockClient.Delegate {
         stateMachine.stop();
         ringtone.stop();
         turnLightOff();
+        PendingIntent pendingIntent = getPendingIntent(getApplicationContext(), PendingIntent.FLAG_NO_CREATE);
+        if (pendingIntent != null) {
+            pendingIntent.cancel();
+        }
         Toast.makeText(getApplicationContext(), "Stopped", Toast.LENGTH_LONG).show();
     }
 
@@ -146,7 +150,9 @@ public class AlarmService extends Service implements ClockClient.Delegate {
 
     public static void clearPendingAlarm(Context context) {
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        manager.cancel(getPendingIntent(context));
+        PendingIntent pendingIntent = getPendingIntent(context);
+        manager.cancel(pendingIntent);
+        pendingIntent.cancel();
     }
 
     public static PendingIntent getPendingIntent(Context context) {
