@@ -9,7 +9,7 @@ android {
     applicationId "me.tahnok.alrm"
     minSdkVersion 23
     targetSdkVersion 25
-    versionCode 5
+    versionCode 6
     versionName "1.0"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
